@@ -1,42 +1,35 @@
-// 3. EnemyController.cs
+// 4. PlayerController.cs 
 using UnityEngine;
 
-/// The main MonoBehaviour attached to your object. It holds the StateMachine and the specific states.
-
-public class EnemyController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     public StateMachine StateMachine { get; private set; }
 
-    // Define your specific states
-    public IdleState IdleState { get; private set; }
-    public ChaseState ChaseState { get; private set; }
-
-    [Header("Enemy Data")]
-    public Transform target;
-    public float moveSpeed = 3f;
-    public float chaseRange = 5f;
+    // Top-Level States
+    public GroundedState GroundedState { get; private set; }
+    public AirborneState AirborneState { get; private set; }
 
     private void Awake()
     {
         StateMachine = new StateMachine();
 
-        // Pass 'this' controller to the states so they can access its data (like moveSpeed or target)
-        IdleState = new IdleState(this, StateMachine);
-        ChaseState = new ChaseState(this, StateMachine);
+        GroundedState = new GroundedState(this, StateMachine);
+        AirborneState = new AirborneState(this, StateMachine);
     }
 
     private void Start()
     {
-        StateMachine.Initialize(IdleState);
+        StateMachine.Initialize(GroundedState);
     }
 
     private void Update()
     {
         StateMachine.Tick();
-    }
 
-    private void FixedUpdate()
-    {
-        StateMachine.FixedTick();
+        // Mock input: Spacebar switches the top-level state to Airborne
+        if (Input.GetKeyDown(KeyCode.Space) && StateMachine.CurrentState == GroundedState)
+        {
+            StateMachine.ChangeState(AirborneState);
+        }
     }
 }
