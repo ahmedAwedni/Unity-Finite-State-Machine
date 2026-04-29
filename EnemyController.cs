@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     {
         StateMachine.Tick();
 
-        // Mock input: Spacebar switches the top-level state to Airborne
+        // Spacebar switches the top-level state to Airborne
         if (Input.GetKeyDown(KeyCode.Space) && StateMachine.CurrentState == GroundedState)
         {
             StateMachine.ChangeState(AirborneState);
